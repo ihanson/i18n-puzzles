@@ -1,5 +1,13 @@
 import datetime
 
+use_test = False
+
+def run(lines):
+	grouped = grouped_times(datetime.datetime.fromisoformat(line) for line in lines)
+	for time in grouped.keys():
+		if grouped[time] >= 4:
+			print(time.isoformat(timespec="seconds"))
+
 def grouped_times(times: list[datetime.datetime]):
 	groups: dict[datetime.datetime, int] = {}
 	for time in times:
@@ -7,9 +15,10 @@ def grouped_times(times: list[datetime.datetime]):
 		groups[rounded] = groups.get(rounded, 0) + 1
 	return groups
 
+#region Common code
 if __name__ == "__main__":
-	with open("02\\input.txt", encoding="utf-8") as in_file:
-		grouped = grouped_times(datetime.datetime.fromisoformat(line.strip()) for line in in_file.readlines())
-	for time in grouped.keys():
-		if grouped[time] >= 4:
-			print(time.isoformat(timespec="seconds"))
+	import pathlib
+	input_path = pathlib.Path(__file__).parent.joinpath("test-input.txt" if use_test else "input.txt")
+	with open(input_path, encoding="utf-8") as in_file:
+		run(line.strip() for line in in_file)
+#endregion

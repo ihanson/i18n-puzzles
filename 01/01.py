@@ -1,3 +1,8 @@
+use_test = False
+
+def run(lines):
+	print(sum(cost(line) for line in lines))
+
 def is_valid_sms(text):
 	return len(text.encode("utf-8")) <= 160
 
@@ -14,6 +19,10 @@ def cost(text):
 		else 0
 	)
 
+#region Common code
 if __name__ == "__main__":
-	with open("01\\input.txt", encoding="utf-8") as in_file:
-		print(sum(cost(line.strip()) for line in in_file.readlines()))
+	import pathlib
+	input_path = pathlib.Path(__file__).parent.joinpath("test-input.txt" if use_test else "input.txt")
+	with open(input_path, encoding="utf-8") as in_file:
+		run(line.strip() for line in in_file)
+#endregion
