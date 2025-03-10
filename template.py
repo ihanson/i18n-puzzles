@@ -1,6 +1,8 @@
+from typing import Iterator
+
 use_test = False
 
-def run(lines):
+def run(lines: Iterator[str]):
 	...
 
 #region Common code
