@@ -1,6 +1,6 @@
 from typing import Iterator
 
-use_test = False
+use_test = True
 
 def run(lines: Iterator[str]):
 	...
