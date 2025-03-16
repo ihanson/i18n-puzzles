@@ -70,11 +70,11 @@ def possible_date_formats(unk_dates: list[UnknownDate]) -> set[DateFormat]:
 	return formats
 
 def is_possible_format(unk_date: UnknownDate, format: DateFormat):
-	(year, month, day) = interpret_with_format(unk_date, format)
+	(year00, month, day) = interpret_with_format(unk_date, format)
 	return (
-		0 <= year <= 99
+		0 <= year00 <= 99
 		and 1 <= month <= 12
-		and 1 <= day <= days_in_month(year, month)
+		and 1 <= day <= days_in_month(full_year(year00), month)
 	)
 
 def interpret_with_format(unk_date: UnknownDate, format: DateFormat) -> Date:
@@ -87,8 +87,10 @@ def interpret_with_format(unk_date: UnknownDate, format: DateFormat) -> Date:
 
 def parse_date(date: Date) -> datetime.date:
 	(year00, month, day) = date
-	year = (2000 if year00 < 20 else 1900) + year00
-	return datetime.date(year, month, day)
+	return datetime.date(full_year(year00), month, day)
+
+def full_year(year00: int) -> int:
+	return (2000 if year00 < 20 else 1900) + year00
 
 def days_in_month(year: int, month: int) -> int:
 	(_, days) = calendar.monthrange(year, month)
