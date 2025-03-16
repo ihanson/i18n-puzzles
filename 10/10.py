@@ -3,6 +3,7 @@ import unicodedata
 import bcrypt
 import functools
 
+
 use_test = False
 
 def run(lines: Iterator[str]):
@@ -14,18 +15,20 @@ def run(lines: Iterator[str]):
 	count = 0
 	for line in lines:
 		[user, attempt] = line.split(" ", 1)
-		if user in pw_hashes and is_valid_login(attempt, pw_hashes[user]):
+		normalized = unicodedata.normalize("NFC", attempt)
+		if user in pw_hashes and is_valid_login(normalized, pw_hashes[user]):
 			count += 1
 	print(count)
 
-def is_valid_login(attempt: str, hashed_pw: bytes) -> bool:
+@functools.cache
+def is_valid_login(normalized_attempt: str, hashed_pw: bytes) -> bool:
 	return any(
 		check_password(test_pw, hashed_pw)
-		for test_pw in recompositions(attempt)
+		for test_pw in recompositions(normalized_attempt)
 	)
 
-def recompositions(string: str) -> Iterator[str]:
-	nfc_chars = list(unicodedata.normalize("NFC", string))
+def recompositions(normalized_string: str) -> Iterator[str]:
+	nfc_chars = list(normalized_string)
 	composed_indexes = {
 		i for (i, char) in enumerate(nfc_chars)
 		if char != unicodedata.normalize("NFD", char)
@@ -48,7 +51,6 @@ def subsets(superset: set[T]) -> Iterator[set[T]]:
 			if bitfield & (1 << i)
 		}
 
-@functools.cache
 def check_password(password: str, hashed_pw: bytes) -> bool:
 	return bcrypt.checkpw(password.encode("utf-8"), hashed_pw)
 
