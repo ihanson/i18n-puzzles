@@ -15,6 +15,7 @@ def run(lines: Iterator[str]):
 	solution = solve(fragments)
 	(col, row) = x_coords(solution)
 	print(col * row)
+	writeToJS(solution);
 
 def solve(fragments: list[Fragment]) -> list[str]:
 	left_edges = {i for (i, f) in enumerate(fragments) if is_left_edge(f)}
@@ -174,6 +175,15 @@ def read_input(lines: Iterator[str]) -> Iterator[list[bytes]]:
 		else:
 			current.append(codecs.decode(line, "hex"))
 	yield current
+
+def writeToJS(solution: list[str]):
+	import pathlib
+	import json
+	output_path = pathlib.Path(__file__).parent.joinpath("draw", "map.js")
+	with open(output_path, "w", encoding="utf-8") as out_file:
+		out_file.write("const treasureMap = ")
+		json.dump("\n".join(solution), out_file)
+		out_file.write(";")
 
 #region Common code
 if __name__ == "__main__":
