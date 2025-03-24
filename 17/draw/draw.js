@@ -4,8 +4,8 @@ function drawMap(fontSize) {
 	const font = `${fontSize / window.devicePixelRatio}px Lucida Console`;
 	ctx.font = font;
 	const metrics = ctx.measureText("A");
-	const charWidth = (metrics.actualBoundingBoxRight + metrics.actualBoundingBoxLeft);
-	const charHeight = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+	const charWidth = metrics.width;
+	const charHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
 	ctx.strokeRect(0, 0, charWidth, charHeight);
 	const map = treasureMap.split("\n").map((line) => [...line]);
 	canvas.height = charHeight * map.length;
@@ -25,7 +25,7 @@ function drawMap(fontSize) {
 }
 
 {
-	let fontSize = 50;
+	let fontSize = 40;
 	while (true) {
 		try {
 			drawMap(fontSize);
